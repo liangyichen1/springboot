@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.llfy.demo.oa.mapper.TUserMapper">
+
+
+
+    <select id="getUserByName" resultType="com.llfy.demo.oa.entity.TUser">
+        select * from t_user where user_name=#{userName}
+    </select>
+
+    <select id="getUser" resultType="com.llfy.demo.oa.entity.TUser">
+        select * from t_user where user_pwd=#{userPwd} and user_name=#{userName}
+    </select>
+
+    <select id="getUserByNameAndId" resultType="com.llfy.demo.oa.entity.TUser">
+        select * from t_user where id != #{id} and user_name = #{userName}
+    </select>
+    <select id="listUser" resultType="com.llfy.demo.oa.entity.TUser">
+        SELECT
+        tu.id,
+        tu.user_name,
+        tu.user_email,
+        tu.user_phone,
+        tu.user_state,
+        tu.create_time,
+        tu.update_time,
+        tr.role_name as roleId
+        FROM
+            t_user tu
+        LEFT JOIN t_role tr ON tu.role_id = tr.role_id
+        <where>
+            <if test="userName != null and userName != ''">
+                user_name like CONCAT(CONCAT('%',#{userName},'%'))
+            </if>
+        </where>
+        order by tu.create_time DESC
+    </select>
+</mapper>

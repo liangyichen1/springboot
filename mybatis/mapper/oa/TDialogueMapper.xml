@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.llfy.demo.oa.mapper.TDialogueMapper">
+
+    <select id="dialogueList" resultType="com.llfy.demo.oa.entity.TDialogue">
+    SELECT * FROM(
+        SELECT
+            dialogue_id,dialogue_content,create_time,0 as type
+        FROM
+            t_dialogue
+        WHERE
+            user_a_id = #{userAId}
+        AND user_b_id = #{userBId}
+        UNION
+        SELECT
+            dialogue_id,dialogue_content,create_time,1 as type
+        FROM
+            t_dialogue
+        WHERE
+            user_a_id = #{userBId}
+        AND user_b_id = #{userAId}
+    )A ORDER BY A.create_time DESC LIMIT 20
+    </select>
+    <select id="dialogueMessage" resultType="com.llfy.demo.oa.entity.TDialogue">
+        SELECT
+            tu.user_name as userAId,td.create_time, tu.id as userBId
+        FROM
+            t_dialogue td
+        LEFT JOIN t_user tu ON tu.id = td.user_a_id
+        WHERE
+            td.state = 0
+        AND td.user_a_id != #{userId}
+        AND td.user_b_id = #{userId}
+        GROUP BY
+            user_a_id
+        ORDER BY
+	    td.create_time DESC
+    </select>
+</mapper>

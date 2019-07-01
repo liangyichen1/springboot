@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.llfy.demo.oa.mapper.TDiaryMapper">
+
+    <select id="diarylist" resultType="com.llfy.demo.oa.entity.TDiary">
+        SELECT
+            td.diary_id,
+            td.create_time,
+            td.diary_title,
+            td.diary_state,
+            td.remarks,
+            td.update_time,
+            td.fraction,
+            tu.user_name as teacher_id
+        FROM t_diary td
+        LEFT JOIN t_user tu ON tu.id = td.teacher_id
+        WHERE tu.id = td.teacher_id AND td.diary_state != 1
+    </select>
+    <select id="diarylist1" resultType="com.llfy.demo.oa.entity.TDiary">
+        SELECT
+            td.diary_id,
+            td.create_time,
+            td.diary_title,
+            td.diary_state,
+            td.remarks,
+            td.update_time,
+            td.fraction,
+            tu.user_name as studentId
+        FROM t_diary td
+        LEFT JOIN t_user tu ON tu.id = td.student_id
+        WHERE tu.id = td.student_id AND td.diary_state = 1
+    </select>
+    <select id="fraction" resultType="com.llfy.demo.oa.entity.TDiary">
+        SELECT COUNT(*) as fraction from t_diary WHERE fraction = '优'
+        UNION ALL
+        SELECT COUNT(*) as fraction from t_diary WHERE fraction = '良'
+        UNION ALL
+        SELECT COUNT(*) as fraction from t_diary WHERE fraction = '差'
+        UNION ALL
+        SELECT COUNT(*) as fraction from t_diary WHERE fraction = '不及格'
+    </select>
+</mapper>

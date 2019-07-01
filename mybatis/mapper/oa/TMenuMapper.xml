@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.llfy.demo.oa.mapper.TMenuMapper">
+
+    <select id="powerByRole" resultType="com.llfy.demo.oa.entity.TMenu">
+        SELECT tm.menu_id, tm.menu_name
+        FROM t_role tr
+               left join t_power tp on tp.role_id = tr.role_id
+               left join t_menu tm on tm.menu_id = tp.menu_id
+        where tp.status = #{status}
+          and tr.role_id = #{roleId}
+    </select>
+</mapper>
